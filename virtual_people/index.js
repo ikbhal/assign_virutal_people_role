@@ -7,6 +7,19 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const humanTasks = [
+  'eat', 'sleep', 'work', 'learn', 'exercise',
+  'read', 'write', 'cook', 'clean', 'garden',
+  'shop', 'travel', 'paint', 'sing', 'dance',
+  'meditate', 'program', 'swim', 'cycle', 'hike',
+  'run', 'volunteer', 'photograph', 'knit', 'sew',
+  'play', 'game', 'watch', 'listen', 'help',
+  'visit', 'care', 'study', 'teach', 'plan',
+  'organize', 'bake', 'fish', 'sculpt', 'sketch',
+  'build', 'repair', 'design', 'compose', 'chat',
+  'celebrate', 'party', 'meet', 'discuss', 'support'
+];
+
 function generateRandomName() {
   const muslimNames = [
     'Muhammad', 'Aisha', 'Ali', 'Fatima', 'Omar', 'Khadijah', 'Hassan', 'Zainab', 'Abdullah', 'Mariam',
@@ -16,9 +29,14 @@ function generateRandomName() {
   return muslimNames[randomIndex];
 }
 
+function generateRandomTask() {
+  const randomIndex = Math.floor(Math.random() * humanTasks.length);
+  return humanTasks[randomIndex];
+}
+
 function addPerson(name) {
   const personName = name || generateRandomName();
-  const person = { name: personName };
+  const person = { name };
   db.insert(person, (err, newPerson) => {
     if (err) {
       console.error('Error adding person:', err);
@@ -80,7 +98,8 @@ function deletePersonByName(name) {
 }
 
 function addTask(name) {
-  const task = { name, type: 'task' };
+  const taskName = name || generateRandomTask();
+  const task = { name: taskName, type: 'task' };
   db.insert(task, (err, newTask) => {
     if (err) {
       console.error('Error adding task:', err);
@@ -170,7 +189,7 @@ function showMenu() {
 
 function closeApp() {
   rl.close();
-  db.persistence.compactDatafile(); // Ensure data is compacted before closing
+  db.persistence.compactDatafile();
 }
 
 rl.on('line', (input) => {
