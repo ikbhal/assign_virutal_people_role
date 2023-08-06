@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bouncing Ball Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    #container {
+      width: 400px;
+      height: 400px;
+      border: 1px solid #000;
+      position: relative;
+    }
+
+    #ball {
+      width: 40px;
+      height: 40px;
+      background-color: #f00;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="ball"></div>
+  </div>
+
+  <script>
+    const container = document.getElementById('container');
+    const ball = document.getElementById('ball');
+    
+    let positionY = 0;
+    let velocity = 5;
+    let gravity = 0.2;
+    
+    function animateBall() {
+      positionY += velocity;
+      velocity += gravity;
+    
+      const containerHeight = container.clientHeight;
+      const ballHeight = ball.clientHeight;
+    
+      if (positionY >= containerHeight - ballHeight) {
+        positionY = containerHeight - ballHeight;
+        velocity = -velocity * 0.8; // Bounce back with some damping
+      }
+    
+      ball.style.bottom = positionY + 'px';
+    
+      requestAnimationFrame(animateBall);
+    }
+    
+    animateBall();
+  </script>
+</body>
+</html>

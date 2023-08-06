@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solar System Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    #solar-system {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .planet {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      position: absolute;
+      background-color: #ddd;
+    }
+
+    #sun {
+      width: 50px;
+      height: 50px;
+      background-color: #fdd835;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="solar-system">
+    <div class="planet" id="mercury"></div>
+    <div class="planet" id="venus"></div>
+    <div class="planet" id="earth"></div>
+    <div class="planet" id="mars"></div>
+    <div class="planet" id="jupiter"></div>
+    <div class="planet" id="saturn"></div>
+    <div class="planet" id="uranus"></div>
+    <div class="planet" id="neptune"></div>
+    <div id="sun"></div>
+  </div>
+
+  <script>
+    const planets = document.querySelectorAll('.planet');
+    const sun = document.getElementById('sun');
+
+    let rotation = 0;
+    const rotationSpeed = 0.01;
+
+    function animateSolarSystem() {
+      rotation += rotationSpeed;
+
+      planets.forEach((planet, index) => {
+        const radius = 50 + index * 30; // Adjust planet distances from the sun
+        const angle = rotation * (index + 1);
+
+        const x = sun.offsetLeft + radius * Math.cos(angle);
+        const y = sun.offsetTop + radius * Math.sin(angle);
+
+        planet.style.left = x + 'px';
+        planet.style.top = y + 'px';
+      });
+
+      requestAnimationFrame(animateSolarSystem);
+    }
+
+    animateSolarSystem();
+  </script>
+</body>
+</html>
