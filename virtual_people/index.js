@@ -1,21 +1,25 @@
 const readline = require('readline');
 const Datastore = require('nedb');
-
-const db = {};
-db.people = new Datastore();
-db.tasks = new Datastore();
-
-db.people.loadDatabase();
-db.tasks.loadDatabase();
+const db = new Datastore({ filename: 'data.db', autoload: true });
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+function generateRandomName() {
+  const muslimNames = [
+    'Muhammad', 'Aisha', 'Ali', 'Fatima', 'Omar', 'Khadijah', 'Hassan', 'Zainab', 'Abdullah', 'Mariam',
+    'Ahmed', 'Safia', 'Ibrahim', 'Nadia', 'Yusuf', 'Hafsa', 'Hamza', 'Sumaya', 'Omar', 'Amina'
+  ];
+  const randomIndex = Math.floor(Math.random() * muslimNames.length);
+  return muslimNames[randomIndex];
+}
+
 function addPerson(name) {
-  const person = { name };
-  db.people.insert(person, (err, newPerson) => {
+  const personName = name || generateRandomName();
+  const person = { name: personName };
+  db.insert(person, (err, newPerson) => {
     if (err) {
       console.error('Error adding person:', err);
     } else {
@@ -25,10 +29,11 @@ function addPerson(name) {
 }
 
 function listPeople() {
-  db.people.find({}, (err, people) => {
+  db.find({}, (err, data) => {
     if (err) {
       console.error('Error fetching people:', err);
     } else {
+      const people = data.filter(item => item.type === 'person');
       console.log('People:');
       people.forEach(person => {
         const taskInfo = person.task ? `(Task ID: ${person.task._id}, Name: ${person.task.name})` : '(No Task assigned)';
@@ -39,7 +44,7 @@ function listPeople() {
 }
 
 function editPerson(name, newName) {
-  db.people.update({ name }, { $set: { name: newName } }, { multi: true }, (err, numReplaced) => {
+  db.update({ name, type: 'person' }, { $set: { name: newName } }, { multi: true }, (err, numReplaced) => {
     if (err) {
       console.error('Error updating person:', err);
     } else if (numReplaced === 0) {
@@ -51,7 +56,7 @@ function editPerson(name, newName) {
 }
 
 function deletePersonById(id) {
-  db.people.remove({ _id: id }, {}, (err, numRemoved) => {
+  db.remove({ _id: id, type: 'person' }, {}, (err, numRemoved) => {
     if (err) {
       console.error('Error deleting person:', err);
     } else if (numRemoved === 0) {
@@ -63,7 +68,7 @@ function deletePersonById(id) {
 }
 
 function deletePersonByName(name) {
-  db.people.remove({ name }, { multi: true }, (err, numRemoved) => {
+  db.remove({ name, type: 'person' }, { multi: true }, (err, numRemoved) => {
     if (err) {
       console.error('Error deleting person:', err);
     } else if (numRemoved === 0) {
@@ -75,8 +80,8 @@ function deletePersonByName(name) {
 }
 
 function addTask(name) {
-  const task = { name };
-  db.tasks.insert(task, (err, newTask) => {
+  const task = { name, type: 'task' };
+  db.insert(task, (err, newTask) => {
     if (err) {
       console.error('Error adding task:', err);
     } else {
@@ -86,7 +91,7 @@ function addTask(name) {
 }
 
 function listTasks() {
-  db.tasks.find({}, (err, tasks) => {
+  db.find({ type: 'task' }, (err, tasks) => {
     if (err) {
       console.error('Error fetching tasks:', err);
     } else {
@@ -99,7 +104,7 @@ function listTasks() {
 }
 
 function deleteTaskById(id) {
-  db.tasks.remove({ _id: id }, {}, (err, numRemoved) => {
+  db.remove({ _id: id, type: 'task' }, {}, (err, numRemoved) => {
     if (err) {
       console.error('Error deleting task:', err);
     } else if (numRemoved === 0) {
@@ -111,7 +116,7 @@ function deleteTaskById(id) {
 }
 
 function deleteTaskByName(name) {
-  db.tasks.remove({ name }, { multi: true }, (err, numRemoved) => {
+  db.remove({ name, type: 'task' }, { multi: true }, (err, numRemoved) => {
     if (err) {
       console.error('Error deleting task:', err);
     } else if (numRemoved === 0) {
@@ -123,19 +128,19 @@ function deleteTaskByName(name) {
 }
 
 function assignTask(personName, taskName) {
-  db.people.findOne({ name: personName }, (err, person) => {
+  db.findOne({ name: personName, type: 'person' }, (err, person) => {
     if (err) {
       console.error('Error finding person:', err);
     } else if (!person) {
       console.log(`Person "${personName}" not found.`);
     } else {
-      db.tasks.findOne({ name: taskName }, (err, task) => {
+      db.findOne({ name: taskName, type: 'task' }, (err, task) => {
         if (err) {
           console.error('Error finding task:', err);
         } else if (!task) {
           console.log(`Task "${taskName}" not found.`);
         } else {
-          db.people.update({ name: personName }, { $set: { task: task } }, {}, (err) => {
+          db.update({ name: personName, type: 'person' }, { $set: { task: task } }, {}, (err) => {
             if (err) {
               console.error('Error assigning task:', err);
             } else {
@@ -161,6 +166,11 @@ function showMenu() {
   console.log('9. Delete Task by Name (dtn)');
   console.log('10. Assign Task to Person (atp)');
   console.log('0. Exit (q)');
+}
+
+function closeApp() {
+  rl.close();
+  db.persistence.compactDatafile(); // Ensure data is compacted before closing
 }
 
 rl.on('line', (input) => {
@@ -217,13 +227,14 @@ rl.on('line', (input) => {
       break;
     case '0':
     case 'q':
-      rl.close();
+      closeApp();
       break;
     default:
       console.log('Invalid command. Please try again.');
   }
-
-  showMenu();
 });
+
+// Ensure the data is saved to the disk when the application is closed
+rl.on('close', closeApp);
 
 showMenu();
