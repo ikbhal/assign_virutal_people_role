@@ -99,3 +99,14 @@
 
       // Display all tasks
       allTasksDiv.innerHTML = '';
+      tasks.forEach(task => {
+        const taskDiv = document.createElement('div');
+        taskDiv.classList.add('task');
+        taskDiv.innerText = task;
+        allTasksDiv.appendChild(taskDiv);
+      });
+    }
+  </script>
+</body>
+
+</html>
