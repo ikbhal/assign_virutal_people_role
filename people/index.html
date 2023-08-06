@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Muslim Name Generator</title>
+  <title>Random Muslim Name & Task Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
 
 <body>
   <div id="container">
-    <h1>Random Muslim Name Generator</h1>
+    <h1>Random Muslim Name & Task Generator</h1>
     <button id="randomNameBtn" onclick="generateRandomName()">Generate Random Name</button>
     <button id="assignTaskBtn" onclick="assignRandomTask()">Assign Random Task</button>
 
@@ -54,60 +54,48 @@
   </div>
 
   <script>
-    const tasks = [
-      { title: 'Task 1', description: 'Description for Task 1' },
-      { title: 'Task 2', description: 'Description for Task 2' },
-      { title: 'Task 3', description: 'Description for Task 3' },
-      // Add more tasks here as needed
+    const names = [
+      "Zainab", "Yusuf", "Ayesha", "Ahmed", "Fatima", "Hassan", "Sumaya", "Omar", "Khadija", "Ibrahim",
+      "Maryam", "Bilal", "Safiya", "Khalid", "Asma", "Abdullah", "Hafsa", "Hamza", "Mariam", "Saad"
     ];
 
-    const people = [
-      { name: 'Person 1', task: null },
-      { name: 'Person 2', task: null },
-      { name: 'Person 3', task: null },
-      // Add more people here as needed
+    const tasks = [
+      "Learn", "Travel", "Cook", "Sing", "Build", "Love", "Plant", "Read", "Laugh", "Teach",
+      "Dance", "Explore", "Write", "Pray", "Help", "Play", "Create", "Listen", "Care", "Dream"
     ];
 
     function generateRandomName() {
-      const randomIndex = Math.floor(Math.random() * people.length);
-      const randomName = people[randomIndex].name;
+      const randomIndex = Math.floor(Math.random() * names.length);
+      const randomName = names[randomIndex];
       document.getElementById('randomName').innerText = randomName;
     }
 
     function assignRandomTask() {
-      const availablePeople = people.filter(person => !person.task);
-      const availableTasks = tasks.filter(task => !task.isCompleted);
+      const assignedTaskElement = document.getElementById('assignedTask');
+      const allTasksDiv = document.getElementById('allTasks');
 
-      if (availablePeople.length === 0 || availableTasks.length === 0) {
-        document.getElementById('assignedTask').innerText = 'Not enough people or tasks available.';
+      const availableNames = names.slice();
+      const availableTasks = tasks.slice();
+
+      // Check if there are available names and tasks
+      if (availableNames.length === 0 || availableTasks.length === 0) {
+        assignedTaskElement.innerText = 'Not enough people or tasks available.';
         return;
       }
 
-      const randomPersonIndex = Math.floor(Math.random() * availablePeople.length);
+      // Get a random name and a random task
+      const randomNameIndex = Math.floor(Math.random() * availableNames.length);
       const randomTaskIndex = Math.floor(Math.random() * availableTasks.length);
 
-      const randomPerson = availablePeople[randomPersonIndex];
+      const randomName = availableNames[randomNameIndex];
       const randomTask = availableTasks[randomTaskIndex];
 
-      randomPerson.task = randomTask;
+      // Update assigned task
+      assignedTaskElement.innerText = `Assigned Task: ${randomName} - ${randomTask}`;
 
-      // Update UI to show the assigned task
-      document.getElementById('assignedTask').innerText = `Assigned Task: ${randomTask.title} - ${randomTask.description}`;
+      // Remove the assigned name and task from the available lists
+      availableNames.splice(randomNameIndex, 1);
+      availableTasks.splice(randomTaskIndex, 1);
 
-      // Mark the task as completed
-      randomTask.isCompleted = true;
-
-      // Update UI to display all tasks
-      const allTasksDiv = document.getElementById('allTasks');
+      // Display all tasks
       allTasksDiv.innerHTML = '';
-      tasks.forEach(task => {
-        const taskDiv = document.createElement('div');
-        taskDiv.classList.add('task');
-        taskDiv.innerText = `${task.title} - ${task.description} (Completed: ${task.isCompleted ? 'Yes' : 'No'})`;
-        allTasksDiv.appendChild(taskDiv);
-      });
-    }
-  </script>
-</body>
-
-</html>
