@@ -103,7 +103,7 @@ const App = () => {
 
   return (
     <div className="container mx-auto mt-5">
-      <div className="mb-5">
+      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
         <h2 className="text-2xl font-bold">Create Person:</h2>
         <input
           type="text"
@@ -121,7 +121,7 @@ const App = () => {
         </button>
       </div>
 
-      <div className="mb-5">
+      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
         <h2 className="text-2xl font-bold">
           <button className="text-blue-500" onClick={handleTogglePersonList}>
             {showPersonList ? 'Hide Person List' : 'Show Person List'}
@@ -142,7 +142,7 @@ const App = () => {
         )}
       </div>
 
-      <div className="mb-5">
+      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
         <h2 className="text-2xl font-bold">Create Task:</h2>
         <input
           type="text"
@@ -172,7 +172,7 @@ const App = () => {
         </button>
       </div>
 
-      <div className="mb-5">
+      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
         <h2 className="text-2xl font-bold">
           <button className="text-blue-500" onClick={handleToggleTaskList}>
             {showTaskList ? 'Hide Task List' : 'Show Task List'}
