@@ -91,6 +91,16 @@ const App = () => {
     }));
   };
 
+  const handleDeleteTask = (index) => {
+    const updatedTasks = tasks.filter((_, taskIndex) => taskIndex !== index);
+    setTasks(updatedTasks);
+    setTaskStatus((prevStatus) => {
+      const updatedStatus = { ...prevStatus };
+      delete updatedStatus[index];
+      return updatedStatus;
+    });
+  };
+
   return (
     <div className="container mx-auto mt-5">
       <div className="mb-5">
@@ -194,7 +204,13 @@ const App = () => {
 
                 if (personMatch && taskMatch) {
                   return (
-                    <li key={index}>
+                    <li key={index} className="flex items-center">
+                      <button
+                        className="text-red-500 mr-2"
+                        onClick={() => handleDeleteTask(index)}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
                       <label>
                         <input
                           type="checkbox"
