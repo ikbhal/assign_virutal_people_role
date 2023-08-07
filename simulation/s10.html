@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alzheimer's Art Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: "Arial", sans-serif;
+    }
+
+    #art-gallery {
+      max-width: 800px;
+      text-align: center;
+    }
+
+    #artwork {
+      width: 100%;
+      max-height: 400px;
+      border: 2px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="art-gallery">
+    <img src="artwork1.jpg" alt="Artwork" id="artwork">
+    <p>Click on the image to switch to a different artwork.</p>
+  </div>
+
+  <audio id="background-music" loop>
+    <source src="background_music.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const artwork = document.getElementById('artwork');
+    const backgroundMusic = document.getElementById('background-music');
+
+    const artworks = [
+      'artwork1.jpg',
+      'artwork2.jpg',
+      'artwork3.jpg',
+      // Add more artwork image URLs here
+    ];
+
+    let currentIndex = 0;
+
+    function switchArtwork() {
+      currentIndex = (currentIndex + 1) % artworks.length;
+      artwork.src = artworks[currentIndex];
+    }
+
+    function startBackgroundMusic() {
+      backgroundMusic.play();
+    }
+
+    function stopBackgroundMusic() {
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+    }
+
+    artwork.addEventListener('click', switchArtwork);
+    artwork.addEventListener('mouseover', startBackgroundMusic);
+    artwork.addEventListener('mouseout', stopBackgroundMusic);
+  </script>
+</body>
+</html>

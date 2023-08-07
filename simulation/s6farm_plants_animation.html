@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growing Plant Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #add8e6;
+    }
+
+    #farm {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      background-color: #8cc63e;
+    }
+
+    .plant {
+      width: 10px;
+      height: 100px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #3b8222;
+      opacity: 0;
+    }
+
+    .leaf {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="farm">
+    <div class="plant"></div>
+  </div>
+
+  <!-- Add the GSAP library -->
+  <script src="gsap.min.js"></script>
+
+  <script>
+    const farm = document.getElementById('farm');
+    const plant = document.querySelector('.plant');
+
+    // Use GSAP for the plant growth animation
+    gsap.to(plant, { height: '100px', opacity: 1, duration: 4, ease: 'power1.out' });
+
+    function createLeaf() {
+      const leaf = document.createElement('div');
+      leaf.classList.add('leaf');
+      leaf.style.backgroundColor = randomColor();
+      farm.appendChild(leaf);
+
+      // Use GSAP for the leaf spinning animation
+      gsap.to(leaf, { bottom: '+=50', opacity: 1, rotate: '+=360', duration: 4, ease: 'power1.out', onComplete: createLeaf });
+    }
+
+    function randomColor() {
+      return '#' + Math.floor(Math.random()*16777215).toString(16);
+    }
+
+    for (let i = 0; i < 5; i++) {
+      createLeaf();
+    }
+  </script>
+</body>
+</html>

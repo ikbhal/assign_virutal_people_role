@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Generation with p5.js</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      background(240);
+      noFill();
+      strokeWeight(2);
+      drawArt();
+    }
+
+    function drawArt() {
+      for (let i = 0; i < 10; i++) {
+        let x = random(width);
+        let y = random(height);
+        let size = random(50, 150);
+        let colorR = random(255);
+        let colorG = random(255);
+        let colorB = random(255);
+
+        stroke(colorR, colorG, colorB, 100);
+        ellipse(x, y, size, size);
+      }
+    }
+
+    function mouseClicked() {
+      clear();
+      background(240);
+      drawArt();
+    }
+  </script>
+</body>
+</html>

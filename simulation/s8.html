@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspiring Artistic Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    #quote-container {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff;
+      font-size: 20px;
+      font-family: "Arial", sans-serif;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="quote-container">
+    <span id="quote"></span>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const numParticles = 100;
+
+    const quotes = [
+      "The only limit is your imagination.",
+      "Create the life you love.",
+      "Believe in yourself and all that you are.",
+      "Every moment is a fresh beginning.",
+      "Dream big, work hard, stay focused.",
+      "You are capable of amazing things.",
+      "Embrace the journey, not just the destination.",
+    ];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createParticle() {
+      const particle = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        size: random(2, 5),
+        color: `hsl(${random(0, 360)}, 100%, 50%)`,
+        speedX: random(-1, 1),
+        speedY: random(-1, 1),
+      };
+      particles.push(particle);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        ctx.fillStyle = particle.color;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wrap particles around the canvas
+        if (particle.x < 0) particle.x = canvas.width;
+        if (particle.x > canvas.width) particle.x = 0;
+        if (particle.y < 0) particle.y = canvas.height;
+        if (particle.y > canvas.height) particle.y = 0;
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    function updateQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const quoteElement = document.getElementById('quote');
+      quoteElement.textContent = quotes[randomIndex];
+    }
+
+    for (let i = 0; i < numParticles; i++) {
+      createParticle();
+    }
+
+    draw();
+    updateQuote();
+    setInterval(updateQuote, 5000); // Change quote every 5 seconds
+  </script>
+</body>
+</html>
+ 

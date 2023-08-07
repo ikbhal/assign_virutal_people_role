@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artistic Game-Like Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const mouse = { x: 0, y: 0 };
+    let requestId;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function distance(x1, y1, x2, y2) {
+      return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw colorful circles around the mouse
+      for (let i = 0; i < 10; i++) {
+        const size = random(10, 100);
+        const color = `hsl(${random(0, 360)}, 100%, 50%)`;
+
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.3;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      requestId = requestAnimationFrame(draw);
+    }
+
+    function updateMousePosition(e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    }
+
+    function handleMouseMove(e) {
+      updateMousePosition(e);
+    }
+
+    function handleTouchMove(e) {
+      updateMousePosition(e.touches[0]);
+    }
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('resize', resizeCanvas);
+
+    draw();
+
+    // Stop animation when the window loses focus
+    window.addEventListener('blur', () => cancelAnimationFrame(requestId));
+  </script>
+</body>
+</html>

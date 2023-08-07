@@ -19,22 +19,32 @@
     }
 
     .star {
-      width: 3px;
-      height: 3px;
+      width: 2px;
+      height: 2px;
       border-radius: 50%;
       position: absolute;
       background-color: #fff;
     }
 
     #black-hole {
-      width: 100px;
-      height: 100px;
+      width: 50px;
+      height: 50px;
       background-color: #000;
       border-radius: 50%;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      animation: rotate 8s linear infinite;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
   </style>
 </head>
@@ -45,8 +55,7 @@
 
   <script>
     const galaxy = document.getElementById('galaxy');
-    const blackHole = document.getElementById('black-hole');
-    const numStars = 100;
+    const numStars = 300;
 
     function createStar() {
       const star = document.createElement('div');
@@ -59,10 +68,6 @@
       return Math.random() * 100 + 'vh';
     }
 
-    function randomSpeed() {
-      return Math.random() * 2 + 1;
-    }
-
     const stars = [];
 
     for (let i = 0; i < numStars; i++) {
@@ -73,25 +78,20 @@
         element: star,
         x: parseFloat(star.style.left),
         y: parseFloat(star.style.top),
-        speedX: randomSpeed(),
-        speedY: randomSpeed(),
       });
     }
 
     function updateStars() {
       stars.forEach(star => {
-        const dx = blackHole.offsetLeft - star.x;
-        const dy = blackHole.offsetTop - star.y;
+        const dx = galaxy.clientWidth / 2 - star.x;
+        const dy = galaxy.clientHeight / 2 - star.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         const forceX = dx / distance;
         const forceY = dy / distance;
 
-        star.speedX += forceX * 0.005;
-        star.speedY += forceY * 0.005;
-
-        star.x += star.speedX;
-        star.y += star.speedY;
+        star.x += forceX * 0.3;
+        star.y += forceY * 0.3;
 
         star.element.style.left = star.x + 'px';
         star.element.style.top = star.y + 'px';
