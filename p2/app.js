@@ -12,6 +12,9 @@ const App = () => {
   // State to track whether the person list is visible or hidden
   const [showPersonList, setShowPersonList] = useState(true);
 
+  // State to track the filter value for tasks
+  const [taskFilter, setTaskFilter] = useState('');
+
   // Load data from local storage on initial render
   useEffect(() => {
     const savedPersons = JSON.parse(localStorage.getItem('persons') || '[]');
@@ -64,6 +67,11 @@ const App = () => {
   // Handle toggle for showing/hiding the person list
   const handleTogglePersonList = () => {
     setShowPersonList(!showPersonList);
+  };
+
+  // Handle filter input change
+  const handleFilterChange = (event) => {
+    setTaskFilter(event.target.value);
   };
 
   return (
@@ -143,12 +151,30 @@ const App = () => {
 
       <div>
         <h2 className="text-2xl font-bold">List of Tasks:</h2>
+        {/* Filter input for tasks */}
+        <input
+          type="text"
+          className="border border-gray-400 px-2 py-1 rounded"
+          placeholder="Filter tasks by person"
+          value={taskFilter}
+          onChange={handleFilterChange}
+        />
+        {/* Filtered task list */}
         <ul className="list-disc list-inside">
-          {tasks.map((task, index) => (
-            <li key={index}>
-              {task.task} - {task.person}
-            </li>
-          ))}
+          {tasks.map((task, index) => {
+            // Check if the task's person matches the filter value (case-insensitive)
+            if (
+              taskFilter === '' ||
+              task.person.toLowerCase().includes(taskFilter.toLowerCase())
+            ) {
+              return (
+                <li key={index}>
+                  {task.task} - {task.person}
+                </li>
+              );
+            }
+            return null;
+          })}
         </ul>
       </div>
     </div>
