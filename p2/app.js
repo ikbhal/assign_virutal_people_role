@@ -10,7 +10,7 @@ const App = () => {
   const [assignedPerson, setAssignedPerson] = useState('');
 
   const [showPersonList, setShowPersonList] = useState(true);
-  const [showTaskList, setShowTaskList] = useState(true); // New state for task list visibility
+  const [showTaskList, setShowTaskList] = useState(true);
 
   const [personFilter, setPersonFilter] = useState('');
   const [taskFilter, setTaskFilter] = useState('');
@@ -68,7 +68,7 @@ const App = () => {
 
   const handleToggleTaskList = () => {
     setShowTaskList(!showTaskList);
-  }; // Function to toggle task list visibility
+  };
 
   const handlePersonFilterChange = (event) => {
     setPersonFilter(event.target.value);
@@ -82,7 +82,20 @@ const App = () => {
     <div className="container mx-auto mt-5">
       <div className="mb-5">
         <h2 className="text-2xl font-bold">Create Person:</h2>
-        {/* ... (rest of the person input code remains the same) */}
+        <input
+          type="text"
+          className="border border-gray-400 px-2 py-1 rounded"
+          placeholder="Enter person name"
+          value={newPerson}
+          onChange={(e) => setNewPerson(e.target.value)}
+          onKeyDown={handlePersonKeyDown}
+        />
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+          onClick={handleAddPerson}
+        >
+          Add Person
+        </button>
       </div>
 
       <div className="mb-5">
@@ -93,14 +106,47 @@ const App = () => {
         </h2>
         {showPersonList && (
           <div>
-            {/* ... (rest of the person list code remains the same) */}
+            {persons.length > 0 ? (
+              <ul className="list-disc list-inside">
+                {persons.map((person, index) => (
+                  <li key={index}>{person}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No persons found.</p>
+            )}
           </div>
         )}
       </div>
 
       <div className="mb-5">
         <h2 className="text-2xl font-bold">Create Task:</h2>
-        {/* ... (rest of the task input code remains the same) */}
+        <input
+          type="text"
+          className="border border-gray-400 px-2 py-1 rounded"
+          placeholder="Enter task description"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          onKeyDown={handleTaskKeyDown}
+        />
+        <select
+          className="border border-gray-400 px-2 py-1 rounded ml-2"
+          value={assignedPerson}
+          onChange={(e) => setAssignedPerson(e.target.value)}
+        >
+          <option value="">Assign to:</option>
+          {persons.map((person, index) => (
+            <option key={index} value={person}>
+              {person}
+            </option>
+          ))}
+        </select>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+          onClick={handleAddTask}
+        >
+          Add Task
+        </button>
       </div>
 
       <div className="mb-5">
