@@ -15,19 +15,21 @@ const App = () => {
   const [personFilter, setPersonFilter] = useState('');
   const [taskFilter, setTaskFilter] = useState('');
 
+  const [taskStatus, setTaskStatus] = useState({});
+
   useEffect(() => {
-    // Load data from local storage on initial render
     const savedPersons = JSON.parse(localStorage.getItem('persons') || '[]');
     const savedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
     const savedAssignedTasks = JSON.parse(localStorage.getItem('assignedTasks') || '{}');
+    const savedTaskStatus = JSON.parse(localStorage.getItem('taskStatus') || '{}');
 
     setPersons(savedPersons);
     setTasks(savedTasks);
     setAssignedTasks(savedAssignedTasks);
+    setTaskStatus(savedTaskStatus);
   }, []);
 
   useEffect(() => {
-    // Save data to local storage whenever there's a change
     localStorage.setItem('persons', JSON.stringify(persons));
   }, [persons]);
 
@@ -38,6 +40,10 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('assignedTasks', JSON.stringify(assignedTasks));
   }, [assignedTasks]);
+
+  useEffect(() => {
+    localStorage.setItem('taskStatus', JSON.stringify(taskStatus));
+  }, [taskStatus]);
 
   const handleAddPerson = () => {
     setPersons([...persons, newPerson]);
@@ -76,6 +82,13 @@ const App = () => {
 
   const handleTaskFilterChange = (event) => {
     setTaskFilter(event.target.value);
+  };
+
+  const handleTaskCheckboxChange = (index) => {
+    setTaskStatus((prevStatus) => ({
+      ...prevStatus,
+      [index]: !prevStatus[index],
+    }));
   };
 
   return (
@@ -182,7 +195,16 @@ const App = () => {
                 if (personMatch && taskMatch) {
                   return (
                     <li key={index}>
-                      {task.task} - {task.person}
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={taskStatus[index] || false}
+                          onChange={() => handleTaskCheckboxChange(index)}
+                        />
+                        <span className={taskStatus[index] ? 'line-through' : ''}>
+                          {task.task} - {task.person}
+                        </span>
+                      </label>
                     </li>
                   );
                 }
