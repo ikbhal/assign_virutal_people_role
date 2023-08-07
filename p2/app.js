@@ -103,132 +103,144 @@ const App = () => {
 
   return (
     <div className="container mx-auto mt-5">
-      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
-        <h2 className="text-2xl font-bold">Create Person:</h2>
-        <input
-          type="text"
-          className="border border-gray-400 px-2 py-1 rounded"
-          placeholder="Enter person name"
-          value={newPerson}
-          onChange={(e) => setNewPerson(e.target.value)}
-          onKeyDown={handlePersonKeyDown}
-        />
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
-          onClick={handleAddPerson}
-        >
-          Add Person
-        </button>
-      </div>
+      <div className="grid grid-cols-2 gap-5">
+        {/* Left Column */}
+        <div style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
+          <h2 className="text-2xl font-bold">Create Person:</h2>
+          <div className="flex mt-2">
+            <input
+              type="text"
+              className="border border-gray-400 px-2 py-1 rounded flex-1"
+              placeholder="Enter person name"
+              value={newPerson}
+              onChange={(e) => setNewPerson(e.target.value)}
+              onKeyDown={handlePersonKeyDown}
+            />
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+              onClick={handleAddPerson}
+            >
+              Add Person
+            </button>
+          </div>
 
-      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
-        <h2 className="text-2xl font-bold">
-          <button className="text-blue-500" onClick={handleTogglePersonList}>
-            {showPersonList ? 'Hide Person List' : 'Show Person List'}
-          </button>
-        </h2>
-        {showPersonList && (
-          <div>
-            {persons.length > 0 ? (
-              <ul className="list-disc list-inside">
-                {persons.map((person, index) => (
-                  <li key={index}>{person}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No persons found.</p>
+          {/* Show Person List */}
+          <div className="mt-5">
+            <h2 className="text-2xl font-bold">
+              <button className="text-blue-500" onClick={handleTogglePersonList}>
+                {showPersonList ? 'Hide Person List' : 'Show Person List'}
+              </button>
+            </h2>
+            {showPersonList && (
+              <div>
+                {persons.length > 0 ? (
+                  <ul className="list-disc list-inside">
+                    {persons.map((person, index) => (
+                      <li key={index}>{person}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No persons found.</p>
+                )}
+              </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
 
-      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
-        <h2 className="text-2xl font-bold">Create Task:</h2>
-        <input
-          type="text"
-          className="border border-gray-400 px-2 py-1 rounded"
-          placeholder="Enter task description"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          onKeyDown={handleTaskKeyDown}
-        />
-        <select
-          className="border border-gray-400 px-2 py-1 rounded ml-2"
-          value={assignedPerson}
-          onChange={(e) => setAssignedPerson(e.target.value)}
-        >
-          <option value="">Assign to:</option>
-          {persons.map((person, index) => (
-            <option key={index} value={person}>
-              {person}
-            </option>
-          ))}
-        </select>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
-          onClick={handleAddTask}
-        >
-          Add Task
-        </button>
-      </div>
-
-      <div className="mb-5" style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
-        <h2 className="text-2xl font-bold">
-          <button className="text-blue-500" onClick={handleToggleTaskList}>
-            {showTaskList ? 'Hide Task List' : 'Show Task List'}
-          </button>
-        </h2>
-        {showTaskList && (
-          <div>
-            <h2 className="text-2xl font-bold">List of Tasks:</h2>
+        {/* Right Column */}
+        <div style={{ borderRadius: "10px", border: "1px solid blue", padding: "10px", margin: "10px" }}>
+          <h2 className="text-2xl font-bold">Create Task:</h2>
+          <div className="flex mt-2">
             <input
               type="text"
-              className="border border-gray-400 px-2 py-1 rounded"
-              placeholder="Filter tasks by person"
-              value={personFilter}
-              onChange={handlePersonFilterChange}
+              className="border border-gray-400 px-2 py-1 rounded flex-1"
+              placeholder="Enter task description"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={handleTaskKeyDown}
             />
-            <input
-              type="text"
-              className="border border-gray-400 px-2 py-1 rounded ml-2"
-              placeholder="Filter tasks by task description"
-              value={taskFilter}
-              onChange={handleTaskFilterChange}
-            />
-            <ul className="list-disc list-inside">
-              {tasks.map((task, index) => {
-                const personMatch =
-                  personFilter === '' || task.person.toLowerCase().includes(personFilter.toLowerCase());
-                const taskMatch =
-                  taskFilter === '' || task.task.toLowerCase().includes(taskFilter.toLowerCase());
-
-                if (personMatch && taskMatch) {
-                  return (
-                    <li key={index} className="flex items-center">
-                      <button
-                        className="text-red-500 mr-2"
-                        onClick={() => handleDeleteTask(index)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={taskStatus[index] || false}
-                          onChange={() => handleTaskCheckboxChange(index)}
-                        />
-                        <span className={taskStatus[index] ? 'line-through' : ''}>
-                          {task.task} - {task.person}
-                        </span>
-                      </label>
-                    </li>
-                  );
-                }
-                return null;
-              })}
-            </ul>
+            <select
+              className="border border-gray-400 px-2 py-1 rounded ml-2 flex-1"
+              value={assignedPerson}
+              onChange={(e) => setAssignedPerson(e.target.value)}
+            >
+              <option value="">Assign to:</option>
+              {persons.map((person, index) => (
+                <option key={index} value={person}>
+                  {person}
+                </option>
+              ))}
+            </select>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
+              onClick={handleAddTask}
+            >
+              Add Task
+            </button>
           </div>
-        )}
+
+          {/* Show Task List */}
+          <div className="mt-5">
+            <h2 className="text-2xl font-bold">
+              <button className="text-blue-500" onClick={handleToggleTaskList}>
+                {showTaskList ? 'Hide Task List' : 'Show Task List'}
+              </button>
+            </h2>
+            {showTaskList && (
+              <div>
+                <h2 className="text-2xl font-bold">List of Tasks:</h2>
+                <div className="flex mt-2">
+                  <input
+                    type="text"
+                    className="border border-gray-400 px-2 py-1 rounded flex-1"
+                    placeholder="Filter tasks by person"
+                    value={personFilter}
+                    onChange={handlePersonFilterChange}
+                  />
+                  <input
+                    type="text"
+                    className="border border-gray-400 px-2 py-1 rounded ml-2 flex-1"
+                    placeholder="Filter tasks by task description"
+                    value={taskFilter}
+                    onChange={handleTaskFilterChange}
+                  />
+                </div>
+                <ul className="list-disc list-inside">
+                  {tasks.map((task, index) => {
+                    const personMatch =
+                      personFilter === '' || task.person.toLowerCase().includes(personFilter.toLowerCase());
+                    const taskMatch =
+                      taskFilter === '' || task.task.toLowerCase().includes(taskFilter.toLowerCase());
+
+                    if (personMatch && taskMatch) {
+                      return (
+                        <li key={index} className="flex items-center">
+                          <button
+                            className="text-red-500 mr-2"
+                            onClick={() => handleDeleteTask(index)}
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={taskStatus[index] || false}
+                              onChange={() => handleTaskCheckboxChange(index)}
+                            />
+                            <span className={taskStatus[index] ? 'line-through' : ''}>
+                              {task.task} - {task.person}
+                            </span>
+                          </label>
+                        </li>
+                      );
+                    }
+                    return null;
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
