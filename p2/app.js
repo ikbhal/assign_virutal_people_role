@@ -1,4 +1,9 @@
 const { useState, useEffect } = React;
+/*
+
+lets work on list , like trello
+add notes to each task, escape to close note hide
+*/
 
 const App = () => {
   const [persons, setPersons] = useState([]);
