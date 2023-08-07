@@ -12,6 +12,9 @@ const App = () => {
   // State to track whether the person list is visible or hidden
   const [showPersonList, setShowPersonList] = useState(true);
 
+  // State to track the filter value for persons
+  const [personFilter, setPersonFilter] = useState('');
+
   // State to track the filter value for tasks
   const [taskFilter, setTaskFilter] = useState('');
 
@@ -69,8 +72,13 @@ const App = () => {
     setShowPersonList(!showPersonList);
   };
 
-  // Handle filter input change
-  const handleFilterChange = (event) => {
+  // Handle person filter input change
+  const handlePersonFilterChange = (event) => {
+    setPersonFilter(event.target.value);
+  };
+
+  // Handle task filter input change
+  const handleTaskFilterChange = (event) => {
     setTaskFilter(event.target.value);
   };
 
@@ -151,22 +159,30 @@ const App = () => {
 
       <div>
         <h2 className="text-2xl font-bold">List of Tasks:</h2>
-        {/* Filter input for tasks */}
+        {/* Person filter input for tasks */}
         <input
           type="text"
           className="border border-gray-400 px-2 py-1 rounded"
           placeholder="Filter tasks by person"
+          value={personFilter}
+          onChange={handlePersonFilterChange}
+        />
+        {/* Task filter input */}
+        <input
+          type="text"
+          className="border border-gray-400 px-2 py-1 rounded ml-2"
+          placeholder="Filter tasks by task description"
           value={taskFilter}
-          onChange={handleFilterChange}
+          onChange={handleTaskFilterChange}
         />
         {/* Filtered task list */}
         <ul className="list-disc list-inside">
           {tasks.map((task, index) => {
-            // Check if the task's person matches the filter value (case-insensitive)
-            if (
-              taskFilter === '' ||
-              task.person.toLowerCase().includes(taskFilter.toLowerCase())
-            ) {
+            // Check if the task's person or task description matches the filter values (case-insensitive)
+            const personMatch = personFilter === '' || task.person.toLowerCase().includes(personFilter.toLowerCase());
+            const taskMatch = taskFilter === '' || task.task.toLowerCase().includes(taskFilter.toLowerCase());
+
+            if (personMatch && taskMatch) {
               return (
                 <li key={index}>
                   {task.task} - {task.person}
